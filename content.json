@@ -1,0 +1,51 @@
+{
+  "site": {
+    "name": "Sidikul Clone",
+    "tagline": "Portal Artikel Teknologi & Bisnis"
+  },
+  "seo": {
+    "title": "Portal Artikel Teknologi & Bisnis Digital | Sidikul Clone",
+    "description": "Portal artikel terpercaya seputar teknologi, web development, bisnis digital, dan gaya hidup developer.",
+    "keywords": "teknologi, web development, bisnis digital, tutorial coding",
+    "canonical": "https://username.github.io/",
+    "ogImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"
+  },
+  "hero": {
+    "title": "Panduan Lengkap Memulai Karier di Bidang Web Development untuk Pemula",
+    "category": "Teknologi",
+    "excerpt": "Pelajari langkah demi langkah, mulai dari HTML dasar hingga framework modern.",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Ilustrasi coding di layar laptop",
+    "url": "/artikel/panduan-web-development-pemula",
+    "date": "2026-10-30"
+  },
+  "nav": [
+    { "label": "Home", "url": "/", "active": true },
+    { "label": "Teknologi", "url": "/teknologi" },
+    { "label": "Bisnis", "url": "/bisnis" },
+    { "label": "Gaya Hidup", "url": "/gaya-hidup" }
+  ],
+  "articles": [
+    {
+      "title": "Cara Optimasi Kecepatan Website dengan Tailwind CSS",
+      "category": "Tips & Trik",
+      "date": "2026-10-28",
+      "url": "/artikel/optimasi-tailwind-css",
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+      "imageAlt": "Kode HTML dan CSS di editor",
+      "excerpt": "Mengurangi ukuran CSS adalah kunci performa. Simak panduan praktisnya di sini."
+    }
+  ],
+  "faq": [
+    {
+      "q": "Apa itu Sidikul Clone?",
+      "a": "Sidikul Clone adalah portal artikel yang membahas teknologi, web development, bisnis digital, dan gaya hidup developer."
+    }
+  ],
+  "footer": [
+    { "label": "Tentang", "url": "/tentang" },
+    { "label": "Kontak", "url": "/kontak" },
+    { "label": "Privasi", "url": "/privasi" },
+    { "label": "Sitemap", "url": "/sitemap.xml" }
+  ]
+}

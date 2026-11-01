@@ -1,0 +1,10 @@
+# Sidikul Clone
+
+> Portal artikel teknologi, bisnis digital, dan gaya hidup developer.
+
+## Artikel
+- [Panduan Web Development Pemula](https://username.github.io/artikel/panduan-web-development-pemula)
+- [Optimasi Tailwind CSS](https://username.github.io/artikel/optimasi-tailwind-css)
+
+## FAQ
+- Apa itu Sidikul Clone? → Portal artikel teknologi & bisnis.

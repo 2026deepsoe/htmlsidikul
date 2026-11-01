@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>CMS Admin · Sidikul Clone</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  .tab-active { @apply bg-blue-600 text-white; }
+  textarea { font-family: 'SF Mono', Consolas, monospace; font-size: 13px; }
+  /* Simple toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
+</style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- ============ LOGIN / TOKEN ============ -->
+<div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">CMS Admin</h1>
+      <p class="text-sm text-gray-500 mt-1">Masuk dengan GitHub Token</p>
+    </div>
+
+    <div id="loginError" class="hidden bg-red-50 text-red-700 text-sm p-3 rounded-lg mb-4"></div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Owner</label>
+        <input id="owner" type="text" placeholder="username" required
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Repository</label>
+        <input id="repo" type="text" value="username.github.io" required
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+        <input id="branch" type="text" value="main" required
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Personal Access Token</label>
+        <input id="token" type="password" placeholder="ghp_..." required
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        <p class="text-xs text-gray-500 mt-1">
+          Fine-grained token → Contents: Read &amp; Write pada repo ini saja.
+        </p>
+      </div>
+      <button type="submit" id="loginBtn"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition">
+        Masuk
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="hidden min-h-screen">
+  <!-- Topbar -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-lg font-bold text-blue-600">CMS<span class="text-gray-400">.clone</span></span>
+        <span id="repoLabel" class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded"></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="statusDot" class="w-2 h-2 rounded-full bg-gray-300"></span>
+        <span id="statusText" class="text-xs text-gray-500">Idle</span>
+        <button id="logoutBtn" class="ml-3 text-xs text-gray-600 hover:text-red-600">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="max-w-6xl mx-auto px-4 mt-4">
+    <nav class="flex gap-1 bg-white rounded-xl p-1 shadow-sm overflow-x-auto">
+      <button data-tab="hero"      class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Hero</button>
+      <button data-tab="articles"  class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Artikel</button>
+      <button data-tab="faq"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">FAQ</button>
+      <button data-tab="nav"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Navigasi</button>
+      <button data-tab="settings"  class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">SEO/Settings</button>
+      <button data-tab="raw"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Raw JSON</button>
+    </nav>
+  </div>
+
+  <!-- Content -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- ===== HERO TAB ===== -->
+    <section data-panel="hero" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+        <h2 class="text-lg font-bold">Hero / Artikel Unggulan</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium">Judul</label>
+            <input data-bind="hero.title" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="text-sm font-medium">Kategori</label>
+            <input data-bind="hero.category" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-sm font-medium">URL Gambar</label>
+            <input data-bind="hero.image" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-sm font-medium">Alt Text (SEO)</label>
+            <input data-bind="hero.imageAlt" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-sm font-medium">Deskripsi Singkat</label>
+            <textarea data-bind="hero.excerpt" rows="2" class="w-full mt-1 px-3 py-2 border rounded-lg"></textarea>
+          </div>
+          <div>
+            <label class="text-sm font-medium">URL Link</label>
+            <input data-bind="hero.url" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="text-sm font-medium">Tanggal</label>
+            <input data-bind="hero.date" type="date" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ARTICLES TAB ===== -->
+    <section data-panel="articles" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">Artikel (<span id="articleCount">0</span>)</h2>
+        <button id="addArticle" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg">+ Tambah Artikel</button>
+      </div>
+      <div id="articlesList" class="space-y-3"></div>
+    </section>
+
+    <!-- ===== FAQ TAB ===== -->
+    <section data-panel="faq" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">FAQ</h2>
+        <button id="addFaq" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg">+ Tambah FAQ</button>
+      </div>
+      <div id="faqList" class="space-y-3"></div>
+    </section>
+
+    <!-- ===== NAV TAB ===== -->
+    <section data-panel="nav" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+        <h2 class="text-lg font-bold">Menu Navigasi</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium">Nama Situs</label>
+            <input data-bind="site.name" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="text-sm font-medium">Tagline</label>
+            <input data-bind="site.tagline" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-medium">Menu Items</h3>
+            <button id="addNav" class="text-blue-600 text-sm">+ Tambah</button>
+          </div>
+          <div id="navList" class="space-y-2"></div>
+        </div>
+        <div class="mt-4">
+          <h3 class="font-medium mb-2">Footer Links</h3>
+          <div id="footerList" class="space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS TAB ===== -->
+    <section data-panel="settings" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+        <h2 class="text-lg font-bold">SEO &amp; Meta</h2>
+        <div>
+          <label class="text-sm font-medium">Title</label>
+          <input data-bind="seo.title" class="w-full mt-1 px-3 py-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Description</label>
+          <textarea data-bind="seo.description" rows="2" class="w-full mt-1 px-3 py-2 border rounded-lg"></textarea>
+        </div>
+        <div>
+          <label class="text-sm font-medium">Keywords</label>
+          <input data-bind="seo.keywords" class="w-full mt-1 px-3 py-2 border rounded-lg">
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium">Canonical URL</label>
+            <input data-bind="seo.canonical" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="text-sm font-medium">OG Image URL</label>
+            <input data-bind="seo.ogImage" class="w-full mt-1 px-3 py-2 border rounded-lg">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RAW TAB ===== -->
+    <section data-panel="raw" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-bold">content.json</h2>
+          <div class="flex gap-2">
+            <button id="reloadBtn" class="text-sm px-3 py-1.5 border rounded-lg hover:bg-gray-50">Muat Ulang</button>
+            <button id="applyRawBtn" class="text-sm px-3 py-1.5 bg-gray-800 text-white rounded-lg hover:bg-gray-900">Terapkan</button>
+          </div>
+        </div>
+        <textarea id="rawEditor" rows="28" class="w-full px-3 py-2 border rounded-lg bg-gray-50"></textarea>
+      </div>
+    </section>
+
+    <!-- Save bar -->
+    <div class="sticky bottom-4 mt-6 flex justify-end gap-2">
+      <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-lg transition">
+        💾 Simpan &amp; Publish ke GitHub
+      </button>
+    </div>
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm"></div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const API = 'https://api.github.com';
+let ctx = { owner:'', repo:'', branch:'main', token:'' };
+let content = null;       // objek content.json
+let sha = null;           // sha file content.json (untuk update)
+let dirty = false;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const toast = (msg, type='ok') => {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = `toast ${type==='err'?'bg-red-600':'bg-gray-900'} text-white px-4 py-2 rounded-lg shadow-lg text-sm`;
+  t.classList.remove('hidden');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.add('hidden'), 3000);
+};
+const setStatus = (text, color='gray') => {
+  $('#statusText').textContent = text;
+  $('#statusDot').className = `w-2 h-2 rounded-full bg-${color}-500`;
+};
+const getPath = (obj, path) => path.split('.').reduce((o,k)=>o?.[k], obj);
+const setPath = (obj, path, val) => {
+  const keys = path.split('.');
+  const last = keys.pop();
+  const tgt = keys.reduce((o,k)=>(o[k] ??= {}), obj);
+  tgt[last] = val;
+};
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+$('#loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('#loginBtn');
+  btn.disabled = true; btn.textContent = 'Memverifikasi...';
+  $('#loginError').classList.add('hidden');
+
+  ctx = {
+    owner: $('#owner').value.trim(),
+    repo: $('#repo').value.trim(),
+    branch: $('#branch').value.trim() || 'main',
+    token: $('#token').value.trim()
+  };
+
+  try {
+    // verifikasi token & akses repo
+    const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}`);
+    if (!r.ok) throw new Error('Repo/token tidak valid: ' + r.status);
+
+    // simpan
+    localStorage.setItem('cms_ctx', JSON.stringify(ctx));
+    await bootApp();
+  } catch (err) {
+    $('#loginError').textContent = err.message;
+    $('#loginError').classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Masuk';
+  }
+});
+
+$('#logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('cms_ctx');
+  location.reload();
+});
+
+/* ============================================================
+   GITHUB API
+   ============================================================ */
+async function ghFetch(path, opts={}) {
+  return fetch(API + path, {
+    ...opts,
+    headers: {
+      'Authorization': `Bearer ${ctx.token}`,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opts.headers||{})
+    }
+  });
+}
+
+async function loadContent() {
+  setStatus('Memuat...', 'yellow');
+  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json?ref=${ctx.branch}`);
+  if (r.status === 404) {
+    // file belum ada → mulai default
+    content = defaultContent();
+    sha = null;
+    setStatus('Baru', 'blue');
+    return;
+  }
+  if (!r.ok) throw new Error('Gagal memuat content.json: ' + r.status);
+  const data = await r.json();
+  sha = data.sha;
+  content = JSON.parse(atob(data.content));
+  setStatus('Tersinkron', 'green');
+}
+
+async function saveContent() {
+  setStatus('Menyimpan...', 'yellow');
+  const body = {
+    message: `chore(cms): update content ${new Date().toISOString()}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+    branch: ctx.branch
+  };
+  if (sha) body.sha = sha;
+
+  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json`, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const err = await r.text();
+    setStatus('Gagal', 'red');
+    throw new Error('Simpan gagal: ' + r.status + ' ' + err);
+  }
+  const data = await r.json();
+  sha = data.content.sha;
+  dirty = false;
+  setStatus('Tersimpan ✓', 'green');
+  toast('✓ Berhasil publish ke GitHub');
+}
+
+/* ============================================================
+   DEFAULT CONTENT
+   ============================================================ */
+function defaultContent() {
+  return {
+    site: { name: 'Sidikul Clone', tagline: 'Portal Artikel Teknologi & Bisnis' },
+    seo: {
+      title: 'Portal Artikel Teknologi & Bisnis Digital',
+      description: 'Portal artikel terpercaya seputar teknologi, web development, bisnis digital.',
+      keywords: 'teknologi, web development, bisnis digital',
+      canonical: 'https://example.com/',
+      ogImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80'
+    },
+    hero: {
+      title: 'Panduan Lengkap Memulai Karier di Bidang Web Development untuk Pemula',
+      category: 'Teknologi',
+      excerpt: 'Pelajari langkah demi langkah, mulai dari HTML dasar hingga framework modern.',
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+      imageAlt: 'Ilustrasi coding di layar laptop',
+      url: '/artikel/panduan-web-development-pemula',
+      date: '2026-10-30'
+    },
+    nav: [
+      { label: 'Home', url: '/', active: true },
+      { label: 'Teknologi', url: '/teknologi' },
+      { label: 'Bisnis', url: '/bisnis' },
+      { label: 'Gaya Hidup', url: '/gaya-hidup' }
+    ],
+    articles: [],
+    faq: [],
+    footer: [
+      { label: 'Tentang', url: '/tentang' },
+      { label: 'Kontak', url: '/kontak' },
+      { label: 'Privasi', url: '/privasi' }
+    ]
+  };
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderAll() {
+  // Bind simple fields
+  $$('[data-bind]').forEach(el => {
+    const v = getPath(content, el.dataset.bind) ?? '';
+    el.value = v;
+    el.oninput = () => {
+      setPath(content, el.dataset.bind, el.value);
+      dirty = true;
+      setStatus('Belum disimpan', 'yellow');
+    };
+  });
+
+  renderArticles();
+  renderFaq();
+  renderNav();
+  renderFooter();
+  $('#rawEditor').value = JSON.stringify(content, null, 2);
+  $('#articleCount').textContent = content.articles.length;
+}
+
+function renderArticles() {
+  const list = $('#articlesList');
+  list.innerHTML = '';
+  content.articles.forEach((a, i) => {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-xl shadow-sm p-4 border border-gray-100';
+    card.innerHTML = `
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1">
+          <input data-art="${i}.title" value="${esc(a.title)}" placeholder="Judul artikel"
+                 class="w-full text-base font-semibold px-2 py-1 border rounded mb-2">
+          <div class="grid sm:grid-cols-3 gap-2">
+            <input data-art="${i}.category" value="${esc(a.category)}" placeholder="Kategori"
+                   class="px-2 py-1 border rounded text-sm">
+            <input data-art="${i}.date" type="date" value="${esc(a.date)}"
+                   class="px-2 py-1 border rounded text-sm">
+            <input data-art="${i}.url" value="${esc(a.url)}" placeholder="/artikel/slug"
+                   class="px-2 py-1 border rounded text-sm">
+          </div>
+          <input data-art="${i}.image" value="${esc(a.image)}" placeholder="URL gambar"
+                 class="w-full mt-2 px-2 py-1 border rounded text-xs">
+          <input data-art="${i}.imageAlt" value="${esc(a.imageAlt)}" placeholder="Alt text (SEO)"
+                 class="w-full mt-1 px-2 py-1 border rounded text-xs">
+          <textarea data-art="${i}.excerpt" rows="2" placeholder="Excerpt"
+                    class="w-full mt-2 px-2 py-1 border rounded text-xs">${esc(a.excerpt)}</textarea>
+        </div>
+        <button data-del="${i}" class="text-red-500 hover:text-red-700 text-sm px-2">✕</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  // bind
+  $$('[data-art]').forEach(el => {
+    el.oninput = () => {
+      const [idx, key] = el.dataset.art.split('.');
+      content.articles[idx][key] = el.value;
+      dirty = true;
+      setStatus('Belum disimpan', 'yellow');
+    };
+  });
+  $$('[data-del]').forEach(el => {
+    el.onclick = () => {
+      if (!confirm('Hapus artikel ini?')) return;
+      content.articles.splice(el.dataset.del, 1);
+      dirty = true;
+      renderArticles();
+      $('#articleCount').textContent = content.articles.length;
+    };
+  });
+}
+
+function renderFaq() {
+  const list = $('#faqList');
+  list.innerHTML = '';
+  content.faq.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-xl shadow-sm p-4 border border-gray-100';
+    card.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="flex-1 space-y-2">
+          <input data-faq="${i}.q" value="${esc(f.q)}" placeholder="Pertanyaan"
+                 class="w-full px-2 py-1 border rounded font-medium">
+          <textarea data-faq="${i}.a" rows="2" placeholder="Jawaban"
+                    class="w-full px-2 py-1 border rounded text-sm">${esc(f.a)}</textarea>
+        </div>
+        <button data-delfaq="${i}" class="text-red-500 hover:text-red-700 text-sm px-2">✕</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+  $$('[data-faq]').forEach(el => {
+    el.oninput = () => {
+      const [idx, key] = el.dataset.faq.split('.');
+      content.faq[idx][key === 'q' ? 'q' : 'a'] = el.value;
+      dirty = true;
+    };
+  });
+  $$('[data-delfaq]').forEach(el => {
+    el.onclick = () => {
+      content.faq.splice(el.dataset.delfaq, 1);
+      dirty = true;
+      renderFaq();
+    };
+  });
+}
+
+function renderNav() {
+  const navList = $('#navList');
+  const footList = $('#footerList');
+  navList.innerHTML = '';
+  footList.innerHTML = '';
+
+  content.nav.forEach((n, i) => {
+    navList.innerHTML += `
+      <div class="flex gap-2 items-center">
+        <input data-nav="${i}.label" value="${esc(n.label)}" placeholder="Label" class="flex-1 px-2 py-1 border rounded text-sm">
+        <input data-nav="${i}.url" value="${esc(n.url)}" placeholder="/url" class="flex-1 px-2 py-1 border rounded text-sm">
+        <button data-delnav="${i}" class="text-red-500 px-2">✕</button>
+      </div>`;
+  });
+  content.footer.forEach((n, i) => {
+    footList.innerHTML += `
+      <div class="flex gap-2 items-center">
+        <input data-foot="${i}.label" value="${esc(n.label)}" placeholder="Label" class="flex-1 px-2 py-1 border rounded text-sm">
+        <input data-foot="${i}.url" value="${esc(n.url)}" placeholder="/url" class="flex-1 px-2 py-1 border rounded text-sm">
+        <button data-delfoot="${i}" class="text-red-500 px-2">✕</button>
+      </div>`;
+  });
+
+  $$('[data-nav]').forEach(el => {
+    el.oninput = () => {
+      const [idx, key] = el.dataset.nav.split('.');
+      content.nav[idx][key] = el.value;
+      dirty = true;
+    };
+  });
+  $$('[data-foot]').forEach(el => {
+    el.oninput = () => {
+      const [idx, key] = el.dataset.foot.split('.');
+      content.footer[idx][key] = el.value;
+      dirty = true;
+    };
+  });
+  $$('[data-delnav]').forEach(el => el.onclick = () => {
+    content.nav.splice(el.dataset.delnav, 1); dirty = true; renderNav();
+  });
+  $$('[data-delfoot]').forEach(el => el.onclick = () => {
+    content.footer.splice(el.dataset.delfoot, 1); dirty = true; renderNav();
+  });
+}
+
+function esc(s='') { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function initTabs() {
+  $$('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      $$('.tab-btn').forEach(b => b.classList.remove('bg-blue-600','text-white'));
+      btn.classList.add('bg-blue-600','text-white');
+      $$('[data-panel]').forEach(p => p.classList.add('hidden'));
+      $(`[data-panel="${btn.dataset.tab}"]`).classList.remove('hidden');
+    };
+  });
+  // default active
+  $('.tab-btn').click();
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+$('#addArticle').onclick = () => {
+  content.articles.unshift({
+    title: '', category: '', date: new Date().toISOString().slice(0,10),
+    url: '', image: '', imageAlt: '', excerpt: ''
+  });
+  dirty = true;
+  renderArticles();
+  $('#articleCount').textContent = content.articles.length;
+};
+$('#addFaq').onclick = () => {
+  content.faq.push({ q: '', a: '' });
+  dirty = true;
+  renderFaq();
+};
+$('#addNav').onclick = () => {
+  content.nav.push({ label: '', url: '' });
+  dirty = true;
+  renderNav();
+};
+$('#saveBtn').onclick = async () => {
+  try {
+    await saveContent();
+  } catch (e) {
+    toast(e.message, 'err');
+  }
+};
+$('#reloadBtn').onclick = async () => {
+  if (dirty && !confirm('Perubahan belum disimpan. Muat ulang?')) return;
+  await loadContent();
+  renderAll();
+};
+$('#applyRawBtn').onclick = () => {
+  try {
+    content = JSON.parse($('#rawEditor').value);
+    dirty = true;
+    renderAll();
+    toast('JSON diterapkan (belum disimpan)');
+  } catch (e) {
+    toast('JSON tidak valid: ' + e.message, 'err');
+  }
+};
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+async function bootApp() {
+  $('#loginScreen').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  $('#repoLabel').textContent = `${ctx.owner}/${ctx.repo}@${ctx.branch}`;
+  initTabs();
+  await loadContent();
+  renderAll();
+}
+
+// Auto-login jika ada ctx tersimpan
+(function init() {
+  const saved = localStorage.getItem('cms_ctx');
+  if (saved) {
+    try {
+      ctx = JSON.parse(saved);
+      $('#owner').value = ctx.owner;
+      $('#repo').value = ctx.repo;
+      $('#branch').value = ctx.branch;
+      $('#token').value = ctx.token;
+      bootApp().catch(err => {
+        toast('Sesi habis: ' + err.message, 'err');
+        localStorage.removeItem('cms_ctx');
+        location.reload();
+      });
+    } catch(e) { /* ignore */ }
+  }
+})();
+
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', (e) => {
+  if (dirty) { e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>
