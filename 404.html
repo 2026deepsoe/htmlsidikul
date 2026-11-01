@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, follow">
+<title>404 - Halaman Tidak Ditemukan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>body { font-family:'Inter', system-ui, sans-serif; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+
+<div class="text-center max-w-md">
+  <div class="text-7xl font-bold text-blue-600 mb-2">404</div>
+  <h1 class="text-2xl font-bold text-gray-900 mb-3">Halaman Tidak Ditemukan</h1>
+  <p class="text-gray-600 mb-6" id="msg">
+    Maaf, halaman atau artikel yang Anda cari tidak tersedia.
+  </p>
+  <div class="flex flex-col sm:flex-row gap-2 justify-center">
+    <a href="./" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+      ← Kembali ke Beranda
+    </a>
+    <a href="./artikel" class="px-5 py-2.5 border border-gray-300 hover:bg-gray-100 rounded-lg font-medium transition">
+      Lihat Semua Artikel
+    </a>
+  </div>
+  <p class="text-xs text-gray-400 mt-8" id="detail"></p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const slug = params.get('slug');
+if (slug) {
+  document.getElementById('msg').innerHTML =
+    `Artikel dengan slug <code class="bg-gray-200 px-1 rounded">${slug.replace(/[<>&]/g,'')}</code> tidak ditemukan atau sudah dihapus.`;
+  document.getElementById('detail').textContent = 'URL: ' + location.pathname + location.search;
+}
+</script>
+</body>
+</html>

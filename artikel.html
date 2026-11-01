@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memuat…</title>
+<meta name="description" content="">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="">
+<meta property="og:description" content="">
+<meta property="og:image" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="application/ld+json" id="ld-json">{"@context":"https://schema.org"}</script>
+<style>
+  body { font-family:'Inter', system-ui, sans-serif; }
+  .prose h1 { font-size: 2rem; font-weight: 700; margin: 1.5rem 0 .75rem; line-height: 1.2; }
+  .prose h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 .75rem; }
+  .prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 .5rem; }
+  .prose p  { margin: .875rem 0; line-height: 1.75; color:#374151; }
+  .prose ul { list-style: disc; padding-left: 1.5rem; margin: .75rem 0; }
+  .prose ol { list-style: decimal; padding-left: 1.5rem; margin: .75rem 0; }
+  .prose li { margin: .25rem 0; line-height: 1.7; }
+  .prose code { background:#f3f4f6; padding:.15rem .4rem; border-radius:.25rem; font-size:.9em; }
+  .prose pre { background:#1f2937; color:#f9fafb; padding:1rem; border-radius:.5rem; overflow-x:auto; margin:1rem 0; }
+  .prose pre code { background:transparent; color:inherit; padding:0; }
+  .prose a { color:#2563eb; text-decoration:underline; }
+  .prose blockquote { border-left:4px solid #d1d5db; padding-left:1rem; color:#6b7280; margin:1rem 0; font-style:italic; }
+  .prose img { max-width:100%; border-radius:.5rem; margin:1rem 0; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<header class="bg-white border-b sticky top-0 z-40">
+  <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="./" id="siteName" class="text-xl font-bold text-blue-600">Memuat…</a>
+    <a href="./" class="text-sm text-gray-600 hover:text-blue-600">← Beranda</a>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+  <div id="loading" class="text-center py-12 text-gray-500">Memuat artikel…</div>
+
+  <article id="article" class="hidden bg-white rounded-2xl shadow-sm overflow-hidden">
+    <img id="artImage" src="" alt="" class="w-full h-64 sm:h-80 object-cover" loading="eager">
+    <div class="p-6 sm:p-8">
+      <div class="flex items-center gap-3 text-sm text-gray-500 mb-3">
+        <span id="artCategory" class="text-xs font-bold text-blue-600 uppercase"></span>
+        <span>·</span>
+        <time id="artDate" datetime=""></time>
+        <span>·</span>
+        <span id="artStatus" class="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700"></span>
+      </div>
+      <h1 id="artTitle" class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3"></h1>
+      <p id="artExcerpt" class="text-lg text-gray-600 mb-6 italic"></p>
+      <div id="artBody" class="prose max-w-none"></div>
+    </div>
+  </article>
+</main>
+
+<footer class="border-t bg-white mt-16">
+  <div class="max-w-3xl mx-auto px-4 py-6 text-sm text-gray-500 text-center">
+    &copy; <span id="year"></span> <span id="footerName">—</span>
+  </div>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = (s='') => String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+
+function mdToHtml(md = '') {
+  let h = md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```([\s\S]*?)```/g, (_,c)=>`<pre><code>${c.trim()}</code></pre>`)
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1">')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^[\*\-] (.+)$/gm,'<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/\n{2,}/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+  h = `<p>${h}</p>`
+    .replace(/<p><li>/g,'<ul><li>')
+    .replace(/<\/li><\/p>/g,'</li></ul>')
+    .replace(/<p><h/g,'<h').replace(/<\/h(\d)><\/p>/g,'</h$1>')
+    .replace(/<p><\/p>/g,'');
+  return h;
+}
+
+(async function() {
+  $('#year').textContent = new Date().getFullYear();
+  const slug = new URLSearchParams(location.search).get('slug');
+
+  if (!slug) {
+    location.replace('./404.html');
+    return;
+  }
+
+  try {
+    const res = await fetch('./content.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('content.json gagal dimuat');
+    const data = await res.json();
+
+    const art = (data.articles || []).find(a => a.slug === slug);
+    if (!art) {
+      // Artikel tidak ada → 404
+      location.replace('./404.html?slug=' + encodeURIComponent(slug));
+      return;
+    }
+    if (art.status === 'draft') {
+      // Draft → tampilkan peringatan (bisa diubah jadi 404 kalau mau strict)
+      $('#artStatus').textContent = 'Draft';
+      $('#artStatus').className = 'text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700';
+    }
+
+    const base = (data.seo.canonical || location.origin).replace(/\/$/,'');
+    const url = `${base}/artikel/${art.slug}`;
+
+    document.title = art.title + ' | ' + data.site.name;
+    const setMeta = (sel, v) => { const e = document.querySelector(sel); if (e) e.content = v || ''; };
+    setMeta('meta[name="description"]', art.excerpt);
+    setMeta('meta[property="og:title"]', art.title);
+    setMeta('meta[property="og:description"]', art.excerpt);
+    setMeta('meta[property="og:image"]', art.image);
+    document.querySelector('link[rel="canonical"]').href = url;
+
+    $('#siteName').textContent = data.site.name;
+    $('#footerName').textContent = data.site.name;
+    $('#artImage').src = art.image;
+    $('#artImage').alt = art.imageAlt || art.title;
+    $('#artCategory').textContent = art.category;
+    $('#artDate').dateTime = art.date;
+    $('#artDate').textContent = fmtDate(art.date);
+    $('#artStatus').textContent = art.status === 'published' ? 'Tayang' : 'Draft';
+    $('#artTitle').textContent = art.title;
+    $('#artExcerpt').textContent = art.excerpt;
+    $('#artBody').innerHTML = mdToHtml(art.body || art.excerpt || '');
+
+    // JSON-LD Article
+    document.getElementById('ld-json').textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": art.title,
+      "description": art.excerpt,
+      "image": [art.image],
+      "datePublished": art.date,
+      "dateModified": art.updatedAt || art.date,
+      "author": { "@type": "Organization", "name": data.site.name },
+      "publisher": {
+        "@type": "Organization",
+        "name": data.site.name,
+        "logo": { "@type": "ImageObject", "url": data.seo.ogImage }
+      },
+      "mainEntityOfPage": url
+    }, null, 2);
+
+    $('#loading').classList.add('hidden');
+    $('#article').classList.remove('hidden');
+  } catch (e) {
+    console.error(e);
+    $('#loading').innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
+      Gagal memuat artikel: ${esc(e.message)}</div>`;
+  }
+})();
+</script>
+</body>
+</html>

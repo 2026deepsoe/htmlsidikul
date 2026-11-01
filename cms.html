@@ -9,60 +9,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   body { font-family: 'Inter', system-ui, sans-serif; }
-  .tab-active { @apply bg-blue-600 text-white; }
   textarea { font-family: 'SF Mono', Consolas, monospace; font-size: 13px; }
-  /* Simple toast */
   .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
+  .md-preview h1 { font-size: 1.75rem; font-weight: 700; margin: 1rem 0 .5rem; }
+  .md-preview h2 { font-size: 1.375rem; font-weight: 700; margin: 1rem 0 .5rem; }
+  .md-preview h3 { font-size: 1.125rem; font-weight: 600; margin: .75rem 0 .5rem; }
+  .md-preview p  { margin: .5rem 0; line-height: 1.7; }
+  .md-preview ul { list-style: disc; padding-left: 1.5rem; margin: .5rem 0; }
+  .md-preview ol { list-style: decimal; padding-left: 1.5rem; margin: .5rem 0; }
+  .md-preview code { background:#f3f4f6; padding: .1rem .3rem; border-radius: .25rem; font-family: monospace; font-size: .9em; }
+  .md-preview pre { background:#1f2937; color:#f9fafb; padding: 1rem; border-radius: .5rem; overflow-x: auto; margin: .75rem 0; }
+  .md-preview pre code { background: transparent; color: inherit; padding: 0; }
+  .md-preview a { color: #2563eb; text-decoration: underline; }
+  .md-preview blockquote { border-left: 3px solid #d1d5db; padding-left: 1rem; color: #6b7280; margin: .5rem 0; }
+  .md-preview img { max-width: 100%; border-radius: .5rem; margin: .75rem 0; }
+  .md-preview table { border-collapse: collapse; margin: .75rem 0; }
+  .md-preview th, .md-preview td { border: 1px solid #e5e7eb; padding: .4rem .75rem; }
+  .md-preview th { background: #f9fafb; font-weight: 600; }
 </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-<!-- ============ LOGIN / TOKEN ============ -->
+<!-- ============ LOGIN ============ -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-    <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">CMS Admin</h1>
-      <p class="text-sm text-gray-500 mt-1">Masuk dengan GitHub Token</p>
-    </div>
-
+    <h1 class="text-2xl font-bold text-center text-gray-900 mb-1">CMS Admin</h1>
+    <p class="text-sm text-center text-gray-500 mb-6">Masuk dengan GitHub Token</p>
     <div id="loginError" class="hidden bg-red-50 text-red-700 text-sm p-3 rounded-lg mb-4"></div>
-
-    <form id="loginForm" class="space-y-4">
+    <form id="loginForm" class="space-y-3">
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Owner</label>
-        <input id="owner" type="text" placeholder="username" required
-               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Owner</label>
+        <input id="owner" type="text" placeholder="2026deepsoe" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Repository</label>
-        <input id="repo" type="text" value="username.github.io" required
-               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        <input id="repo" type="text" value="htmlsidikul" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
-        <input id="branch" type="text" value="main" required
-               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        <input id="branch" type="text" value="main" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Personal Access Token</label>
-        <input id="token" type="password" placeholder="ghp_..." required
-               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-        <p class="text-xs text-gray-500 mt-1">
-          Fine-grained token → Contents: Read &amp; Write pada repo ini saja.
-        </p>
+        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Token</label>
+        <input id="token" type="password" placeholder="ghp_..." required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+        <p class="text-xs text-gray-500 mt-1">Fine-grained token → Contents: Read &amp; Write.</p>
       </div>
-      <button type="submit" id="loginBtn"
-              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition">
-        Masuk
-      </button>
+      <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition">Masuk</button>
     </form>
   </div>
 </div>
 
 <!-- ============ APP ============ -->
 <div id="app" class="hidden min-h-screen">
-  <!-- Topbar -->
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+  <header class="bg-white border-b sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="text-lg font-bold text-blue-600">CMS<span class="text-gray-400">.clone</span></span>
@@ -76,26 +75,60 @@
     </div>
   </header>
 
-  <!-- Tabs -->
   <div class="max-w-6xl mx-auto px-4 mt-4">
     <nav class="flex gap-1 bg-white rounded-xl p-1 shadow-sm overflow-x-auto">
-      <button data-tab="hero"      class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Hero</button>
-      <button data-tab="articles"  class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Artikel</button>
-      <button data-tab="faq"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">FAQ</button>
-      <button data-tab="nav"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Navigasi</button>
-      <button data-tab="settings"  class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">SEO/Settings</button>
-      <button data-tab="raw"       class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Raw JSON</button>
+      <button data-tab="hero" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Hero</button>
+      <button data-tab="articles" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Artikel</button>
+      <button data-tab="faq" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">FAQ</button>
+      <button data-tab="nav" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Navigasi</button>
+      <button data-tab="settings" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">SEO</button>
+      <button data-tab="raw" class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100">Raw JSON</button>
     </nav>
   </div>
 
-  <!-- Content -->
   <main class="max-w-6xl mx-auto px-4 py-6">
 
-    <!-- ===== HERO TAB ===== -->
+    <!-- ===== HERO TAB (dengan stats) ===== -->
     <section data-panel="hero" class="hidden">
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
+          <div class="text-2xl font-bold text-gray-900" id="statTotal">0</div>
+          <div class="text-xs text-gray-500 mt-1">Total Artikel</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-500">
+          <div class="text-2xl font-bold text-green-600" id="statPublished">0</div>
+          <div class="text-xs text-gray-500 mt-1">Tayang</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-yellow-500">
+          <div class="text-2xl font-bold text-yellow-600" id="statDraft">0</div>
+          <div class="text-xs text-gray-500 mt-1">Draft</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-purple-500">
+          <div class="text-2xl font-bold text-purple-600" id="statCategories">0</div>
+          <div class="text-xs text-gray-500 mt-1">Kategori</div>
+        </div>
+      </div>
+
+      <!-- Daftar status artikel ringkas -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold text-gray-900">Status Artikel</h3>
+          <span class="text-xs text-gray-500">Klik untuk edit di tab Artikel</span>
+        </div>
+        <div id="heroArticleList" class="divide-y divide-gray-100 max-h-64 overflow-y-auto"></div>
+      </div>
+
+      <!-- Hero Form -->
       <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
         <h2 class="text-lg font-bold">Hero / Artikel Unggulan</h2>
         <div class="grid md:grid-cols-2 gap-4">
+          <div class="md:col-span-2">
+            <label class="text-sm font-medium">Pilih dari Artikel (atau isi manual)</label>
+            <select id="heroPicker" class="w-full mt-1 px-3 py-2 border rounded-lg">
+              <option value="">— Pilih artikel —</option>
+            </select>
+          </div>
           <div>
             <label class="text-sm font-medium">Judul</label>
             <input data-bind="hero.title" class="w-full mt-1 px-3 py-2 border rounded-lg">
@@ -109,7 +142,7 @@
             <input data-bind="hero.image" class="w-full mt-1 px-3 py-2 border rounded-lg">
           </div>
           <div class="md:col-span-2">
-            <label class="text-sm font-medium">Alt Text (SEO)</label>
+            <label class="text-sm font-medium">Alt Text</label>
             <input data-bind="hero.imageAlt" class="w-full mt-1 px-3 py-2 border rounded-lg">
           </div>
           <div class="md:col-span-2">
@@ -137,7 +170,7 @@
       <div id="articlesList" class="space-y-3"></div>
     </section>
 
-    <!-- ===== FAQ TAB ===== -->
+    <!-- ===== FAQ ===== -->
     <section data-panel="faq" class="hidden">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-bold">FAQ</h2>
@@ -146,7 +179,7 @@
       <div id="faqList" class="space-y-3"></div>
     </section>
 
-    <!-- ===== NAV TAB ===== -->
+    <!-- ===== NAV ===== -->
     <section data-panel="nav" class="hidden">
       <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
         <h2 class="text-lg font-bold">Menu Navigasi</h2>
@@ -174,7 +207,7 @@
       </div>
     </section>
 
-    <!-- ===== SETTINGS TAB ===== -->
+    <!-- ===== SETTINGS ===== -->
     <section data-panel="settings" class="hidden">
       <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4">
         <h2 class="text-lg font-bold">SEO &amp; Meta</h2>
@@ -196,14 +229,14 @@
             <input data-bind="seo.canonical" class="w-full mt-1 px-3 py-2 border rounded-lg">
           </div>
           <div>
-            <label class="text-sm font-medium">OG Image URL</label>
+            <label class="text-sm font-medium">OG Image</label>
             <input data-bind="seo.ogImage" class="w-full mt-1 px-3 py-2 border rounded-lg">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== RAW TAB ===== -->
+    <!-- ===== RAW ===== -->
     <section data-panel="raw" class="hidden">
       <div class="bg-white rounded-2xl shadow-sm p-6">
         <div class="flex items-center justify-between mb-3">
@@ -217,33 +250,154 @@
       </div>
     </section>
 
-    <!-- Save bar -->
     <div class="sticky bottom-4 mt-6 flex justify-end gap-2">
-      <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-lg transition">
-        💾 Simpan &amp; Publish ke GitHub
-      </button>
+      <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-lg transition">💾 Simpan &amp; Publish</button>
     </div>
   </main>
 </div>
 
-<!-- Toast -->
+<!-- MODAL EDITOR ARTIKEL -->
+<div id="editorModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col">
+    <div class="flex items-center justify-between px-5 py-3 border-b">
+      <h2 class="text-lg font-bold" id="editorTitle">Edit Artikel</h2>
+      <button id="closeEditor" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">×</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+
+      <!-- Meta -->
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium">Judul</label>
+          <input id="edTitle" class="w-full mt-1 px-3 py-2 border rounded-lg" placeholder="Judul artikel...">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Slug <span class="text-xs text-gray-400">(auto dari judul)</span></label>
+          <div class="flex gap-1 mt-1">
+            <input id="edSlug" class="flex-1 px-3 py-2 border rounded-lg font-mono text-sm" placeholder="otomatis-dari-judul">
+            <button id="regenSlug" class="px-3 py-2 border rounded-lg text-sm hover:bg-gray-50" title="Generate ulang dari judul">⟳</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm font-medium">Kategori</label>
+          <input id="edCategory" class="w-full mt-1 px-3 py-2 border rounded-lg" placeholder="Teknologi">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Tanggal</label>
+          <input id="edDate" type="date" class="w-full mt-1 px-3 py-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Status</label>
+          <select id="edStatus" class="w-full mt-1 px-3 py-2 border rounded-lg">
+            <option value="published">Tayang</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Gambar + Upload -->
+      <div class="border-t pt-3">
+        <label class="text-sm font-medium">Gambar Utama</label>
+        <div class="flex gap-2 mt-1">
+          <input id="edImage" class="flex-1 px-3 py-2 border rounded-lg text-sm" placeholder="https://... atau /assets/img.jpg">
+          <label class="px-3 py-2 bg-gray-100 border rounded-lg text-sm cursor-pointer hover:bg-gray-200">
+            📤 Upload
+            <input id="edImageUpload" type="file" accept="image/*" class="hidden">
+          </label>
+        </div>
+        <input id="edImageAlt" class="w-full mt-2 px-3 py-2 border rounded-lg text-sm" placeholder="Alt text gambar (SEO)">
+        <div id="edImagePreview" class="mt-2 hidden">
+          <img class="rounded-lg max-h-40 border" alt="preview">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium">Excerpt / Ringkasan</label>
+        <textarea id="edExcerpt" rows="2" class="w-full mt-1 px-3 py-2 border rounded-lg" placeholder="Ringkasan singkat untuk kartu artikel..."></textarea>
+      </div>
+
+      <!-- Markdown editor + preview -->
+      <div class="border-t pt-3">
+        <div class="flex items-center justify-between mb-1">
+          <label class="text-sm font-medium">Isi Artikel (Markdown)</label>
+          <div class="flex gap-1 text-xs">
+            <button type="button" data-md="bold"      class="px-2 py-1 border rounded hover:bg-gray-50 font-bold">B</button>
+            <button type="button" data-md="italic"    class="px-2 py-1 border rounded hover:bg-gray-50 italic">I</button>
+            <button type="button" data-md="h2"        class="px-2 py-1 border rounded hover:bg-gray-50">H2</button>
+            <button type="button" data-md="link"      class="px-2 py-1 border rounded hover:bg-gray-50">🔗</button>
+            <button type="button" data-md="code"      class="px-2 py-1 border rounded hover:bg-gray-50">&lt;/&gt;</button>
+            <button type="button" data-md="img"       class="px-2 py-1 border rounded hover:bg-gray-50">🖼</button>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <textarea id="edBody" rows="20" class="px-3 py-2 border rounded-lg w-full" placeholder="# Judul&#10;&#10;Tulis konten di sini..."></textarea>
+          <div id="mdPreview" class="px-3 py-2 border rounded-lg bg-gray-50 overflow-y-auto md-preview" style="max-height:460px"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">Preview di kanan. Upload gambar → URL otomatis disisipkan.</p>
+      </div>
+    </div>
+    <div class="px-5 py-3 border-t flex justify-end gap-2">
+      <button id="cancelEditor" class="px-4 py-2 border rounded-lg text-sm hover:bg-gray-50">Batal</button>
+      <button id="saveEditor" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">Simpan Artikel</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast hidden bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm"></div>
 
 <script>
+/* ============================================================
+   MARKDOWN MINI PARSER (tanpa dependency)
+   ============================================================ */
+function mdToHtml(md = '') {
+  let html = md
+    // escape HTML
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    // code block ```...```
+    .replace(/```([\s\S]*?)```/g, (_,c)=>`<pre><code>${c.trim()}</code></pre>`)
+    // inline code
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    // bold, italic
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    // images
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1">')
+    // links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    // headings
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    // blockquote
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    // lists
+    .replace(/^[\*\-] (.+)$/gm,'<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    // paragraphs
+    .replace(/\n{2,}/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+  // wrap in <p>
+  html = `<p>${html}</p>`
+    .replace(/<p><li>/g,'<ul><li>')
+    .replace(/<\/li><\/p>/g,'</li></ul>')
+    .replace(/<p><h/g,'<h')
+    .replace(/<\/h(\d)><\/p>/g,'</h$1>')
+    .replace(/<p><\/p>/g,'');
+  return html;
+}
+
 /* ============================================================
    STATE
    ============================================================ */
 const API = 'https://api.github.com';
 let ctx = { owner:'', repo:'', branch:'main', token:'' };
-let content = null;       // objek content.json
-let sha = null;           // sha file content.json (untuk update)
-let dirty = false;
+let content = null, sha = null, dirty = false;
+let editingIndex = -1;
 
-/* ============================================================
-   HELPERS
-   ============================================================ */
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = (s='') => String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+
 const toast = (msg, type='ok') => {
   const t = $('#toast');
   t.textContent = msg;
@@ -252,16 +406,487 @@ const toast = (msg, type='ok') => {
   clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.add('hidden'), 3000);
 };
-const setStatus = (text, color='gray') => {
-  $('#statusText').textContent = text;
+const setStatus = (txt, color='gray') => {
+  $('#statusText').textContent = txt;
   $('#statusDot').className = `w-2 h-2 rounded-full bg-${color}-500`;
 };
-const getPath = (obj, path) => path.split('.').reduce((o,k)=>o?.[k], obj);
-const setPath = (obj, path, val) => {
-  const keys = path.split('.');
-  const last = keys.pop();
-  const tgt = keys.reduce((o,k)=>(o[k] ??= {}), obj);
-  tgt[last] = val;
+const getPath = (o,p) => p.split('.').reduce((x,k)=>x?.[k], o);
+const setPath = (o,p,v) => {
+  const ks = p.split('.'); const last = ks.pop();
+  const tgt = ks.reduce((x,k)=>(x[k] ??= {}), o);
+  tgt[last] = v;
+};
+
+/* Slug generator */
+function slugify(str='') {
+  return String(str).toLowerCase().trim()
+    .replace(/[^\w\s-]/g,'')
+    .replace(/[\s_-]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+
+/* ============================================================
+   GITHUB
+   ============================================================ */
+async function ghFetch(path, opts={}) {
+  return fetch(API + path, {
+    ...opts,
+    headers: {
+      'Authorization': `Bearer ${ctx.token}`,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opts.headers||{})
+    }
+  });
+}
+
+async function loadContent() {
+  setStatus('Memuat...', 'yellow');
+  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json?ref=${ctx.branch}`);
+  if (r.status === 404) {
+    content = defaultContent();
+    sha = null;
+    setStatus('Baru', 'blue');
+    return;
+  }
+  if (!r.ok) throw new Error('Gagal memuat: ' + r.status);
+  const data = await r.json();
+  sha = data.sha;
+  content = JSON.parse(atob(data.content.replace(/\s/g,'')));
+  // Migrasi: pastikan field slug & status ada
+  content.articles.forEach(a => {
+    if (!a.slug) a.slug = slugify(a.title || 'artikel');
+    if (!a.status) a.status = 'published';
+    if (a.body === undefined) a.body = '';
+  });
+  setStatus('Tersinkron', 'green');
+}
+
+async function saveContent() {
+  setStatus('Menyimpan...', 'yellow');
+  const body = {
+    message: `chore(cms): update ${new Date().toISOString()}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+    branch: ctx.branch
+  };
+  if (sha) body.sha = sha;
+  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json`, {
+    method: 'PUT', body: JSON.stringify(body)
+  });
+  if (!r.ok) { setStatus('Gagal','red'); throw new Error('Simpan gagal: ' + r.status); }
+  const data = await r.json();
+  sha = data.content.sha;
+  dirty = false;
+  setStatus('Tersimpan ✓', 'green');
+  toast('✓ Berhasil publish');
+}
+
+/* Upload gambar ke assets/img/ via GitHub API */
+async function uploadImage(file) {
+  const base64 = await fileToBase64(file);
+  const ext = file.name.split('.').pop() || 'png';
+  const name = `${Date.now()}-${slugify(file.name.replace(/\.[^.]+$/,''))}.${ext}`;
+  const path = `assets/img/${name}`;
+  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/${path}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `chore: upload image ${name}`,
+      content: base64.split(',')[1],
+      branch: ctx.branch
+    })
+  });
+  if (!r.ok) throw new Error('Upload gagal: ' + r.status);
+  // URL publik GitHub Pages
+  return `https://${ctx.owner}.github.io/${ctx.repo}/${path}`;
+}
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(file);
+  });
+}
+
+/* ============================================================
+   DEFAULT
+   ============================================================ */
+function defaultContent() {
+  return {
+    site: { name: 'Sidikul Clone', tagline: 'Portal Artikel Teknologi & Bisnis' },
+    seo: {
+      title: 'Portal Artikel Teknologi & Bisnis Digital',
+      description: 'Portal artikel terpercaya seputar teknologi, web development, bisnis digital.',
+      keywords: 'teknologi, web development, bisnis digital',
+      canonical: `https://${ctx.owner}.github.io/${ctx.repo}/`,
+      ogImage: ''
+    },
+    hero: { title:'', category:'', excerpt:'', image:'', imageAlt:'', url:'', date:'' },
+    nav: [
+      { label:'Home', url:'/', active:true },
+      { label:'Teknologi', url:'/teknologi' },
+      { label:'Bisnis', url:'/bisnis' }
+    ],
+    articles: [],
+    faq: [],
+    footer: [
+      { label:'Tentang', url:'/tentang' },
+      { label:'Privasi', url:'/privasi' }
+    ]
+  };
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderAll() {
+  // bind simple
+  $$('[data-bind]').forEach(el => {
+    const v = getPath(content, el.dataset.bind) ?? '';
+    el.value = v;
+    el.oninput = () => {
+      setPath(content, el.dataset.bind, el.value);
+      dirty = true;
+      setStatus('Belum disimpan', 'yellow');
+    };
+  });
+
+  renderStats();
+  renderHeroArticleList();
+  renderHeroPicker();
+  renderArticles();
+  renderFaq();
+  renderNav();
+  $('#rawEditor').value = JSON.stringify(content, null, 2);
+  $('#articleCount').textContent = content.articles.length;
+}
+
+/* --- Stats --- */
+function renderStats() {
+  const total = content.articles.length;
+  const pub = content.articles.filter(a => a.status === 'published').length;
+  const draft = content.articles.filter(a => a.status === 'draft').length;
+  const cats = new Set(content.articles.map(a => a.category).filter(Boolean)).size;
+  $('#statTotal').textContent = total;
+  $('#statPublished').textContent = pub;
+  $('#statDraft').textContent = draft;
+  $('#statCategories').textContent = cats;
+}
+
+/* --- List status di Hero tab --- */
+function renderHeroArticleList() {
+  const box = $('#heroArticleList');
+  if (!content.articles.length) {
+    box.innerHTML = '<p class="text-sm text-gray-500 py-3">Belum ada artikel. Tambah di tab Artikel.</p>';
+    return;
+  }
+  box.innerHTML = content.articles.map((a, i) => `
+    <div class="flex items-center justify-between py-2 text-sm">
+      <div class="flex-1 min-w-0">
+        <div class="font-medium truncate">${esc(a.title || '(tanpa judul)')}</div>
+        <div class="text-xs text-gray-500 font-mono truncate">/artikel/${esc(a.slug || '-')}</div>
+      </div>
+      <div class="flex items-center gap-2 ml-2">
+        <span class="text-[10px] px-2 py-0.5 rounded-full ${a.status==='published'?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">
+          ${a.status==='published'?'Tayang':'Draft'}
+        </span>
+        <button data-edit-art="${i}" class="text-blue-600 text-xs hover:underline">Edit</button>
+      </div>
+    </div>
+  `).join('');
+  $$('[data-edit-art]').forEach(el => el.onclick = () => openEditor(parseInt(el.dataset.editArt)));
+}
+
+/* --- Hero Picker (dropdown) --- */
+function renderHeroPicker() {
+  const sel = $('#heroPicker');
+  sel.innerHTML = '<option value="">— Pilih artikel —</option>' +
+    content.articles.map((a, i) =>
+      `<option value="${i}">${esc(a.title)}</option>`
+    ).join('');
+  sel.onchange = () => {
+    const i = sel.value;
+    if (i === '') return;
+    const a = content.articles[i];
+    content.hero = {
+      title: a.title,
+      category: a.category,
+      excerpt: a.excerpt,
+      image: a.image,
+      imageAlt: a.imageAlt,
+      url: `/artikel/${a.slug}`,
+      date: a.date
+    };
+    dirty = true;
+    renderAll();
+    toast('Hero diisi dari artikel');
+  };
+}
+
+/* --- Articles list (dengan status badge & markdown indicator) --- */
+function renderArticles() {
+  const list = $('#articlesList');
+  if (!content.articles.length) {
+    list.innerHTML = '<p class="text-sm text-gray-500 text-center py-8 bg-white rounded-xl">Belum ada artikel</p>';
+    return;
+  }
+  list.innerHTML = content.articles.map((a, i) => `
+    <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-bold text-gray-900 truncate">${esc(a.title || '(tanpa judul)')}</h3>
+            <span class="text-[10px] px-2 py-0.5 rounded-full shrink-0 ${a.status==='published'?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">
+              ${a.status==='published'?'Tayang':'Draft'}
+            </span>
+          </div>
+          <div class="text-xs text-gray-500 font-mono">/artikel/${esc(a.slug || '-')}</div>
+          <div class="text-xs text-gray-400 mt-1">${esc(a.category || '-')} · ${esc(a.date || '-')} ${a.body ? '· 📝 Markdown' : ''}</div>
+        </div>
+        <div class="flex gap-1 shrink-0">
+          <a href="./artikel.html?slug=${encodeURIComponent(a.slug)}" target="_blank"
+             class="text-xs px-2 py-1 border rounded hover:bg-gray-50" title="Preview">👁</a>
+          <button data-edit="${i}" class="text-xs px-2 py-1 border rounded hover:bg-blue-50 text-blue-600">Edit</button>
+          <button data-del="${i}" class="text-xs px-2 py-1 border rounded hover:bg-red-50 text-red-600">Hapus</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  $$('[data-edit]').forEach(el => el.onclick = () => openEditor(parseInt(el.dataset.edit)));
+  $$('[data-del]').forEach(el => el.onclick = () => {
+    if (!confirm('Hapus artikel ini?')) return;
+    content.articles.splice(el.dataset.del, 1);
+    dirty = true;
+    renderAll();
+  });
+}
+
+/* --- FAQ --- */
+function renderFaq() {
+  const list = $('#faqList');
+  list.innerHTML = content.faq.map((f, i) => `
+    <div class="bg-white rounded-xl shadow-sm p-4">
+      <div class="flex items-start gap-3">
+        <div class="flex-1 space-y-2">
+          <input data-faq="${i}.q" value="${esc(f.q)}" placeholder="Pertanyaan" class="w-full px-2 py-1 border rounded font-medium">
+          <textarea data-faq="${i}.a" rows="2" placeholder="Jawaban" class="w-full px-2 py-1 border rounded text-sm">${esc(f.a)}</textarea>
+        </div>
+        <button data-delfaq="${i}" class="text-red-500 px-2">✕</button>
+      </div>
+    </div>
+  `).join('');
+  $$('[data-faq]').forEach(el => el.oninput = () => {
+    const [i, k] = el.dataset.faq.split('.');
+    content.faq[i][k === 'q' ? 'q' : 'a'] = el.value;
+    dirty = true;
+  });
+  $$('[data-delfaq]').forEach(el => el.onclick = () => {
+    content.faq.splice(el.dataset.delfaq, 1); dirty = true; renderFaq();
+  });
+}
+
+/* --- Nav --- */
+function renderNav() {
+  const n = $('#navList'), f = $('#footerList');
+  n.innerHTML = content.nav.map((x, i) => `
+    <div class="flex gap-2 items-center">
+      <input data-nav="${i}.label" value="${esc(x.label)}" class="flex-1 px-2 py-1 border rounded text-sm">
+      <input data-nav="${i}.url" value="${esc(x.url)}" class="flex-1 px-2 py-1 border rounded text-sm">
+      <button data-delnav="${i}" class="text-red-500 px-2">✕</button>
+    </div>
+  `).join('');
+  f.innerHTML = content.footer.map((x, i) => `
+    <div class="flex gap-2 items-center">
+      <input data-foot="${i}.label" value="${esc(x.label)}" class="flex-1 px-2 py-1 border rounded text-sm">
+      <input data-foot="${i}.url" value="${esc(x.url)}" class="flex-1 px-2 py-1 border rounded text-sm">
+      <button data-delfoot="${i}" class="text-red-500 px-2">✕</button>
+    </div>
+  `).join('');
+  $$('[data-nav]').forEach(el => el.oninput = () => {
+    const [i,k] = el.dataset.nav.split('.'); content.nav[i][k] = el.value; dirty = true;
+  });
+  $$('[data-foot]').forEach(el => el.oninput = () => {
+    const [i,k] = el.dataset.foot.split('.'); content.footer[i][k] = el.value; dirty = true;
+  });
+  $$('[data-delnav]').forEach(el => el.onclick = () => { content.nav.splice(el.dataset.delnav,1); dirty=true; renderNav(); });
+  $$('[data-delfoot]').forEach(el => el.onclick = () => { content.footer.splice(el.dataset.delfoot,1); dirty=true; renderNav(); });
+}
+
+/* ============================================================
+   EDITOR MODAL
+   ============================================================ */
+function openEditor(index) {
+  editingIndex = index;
+  const a = content.articles[index];
+  $('#editorTitle').textContent = index >= 0 ? 'Edit Artikel' : 'Artikel Baru';
+  $('#edTitle').value = a.title || '';
+  $('#edSlug').value = a.slug || '';
+  $('#edCategory').value = a.category || '';
+  $('#edDate').value = a.date || new Date().toISOString().slice(0,10);
+  $('#edStatus').value = a.status || 'published';
+  $('#edImage').value = a.image || '';
+  $('#edImageAlt').value = a.imageAlt || '';
+  $('#edExcerpt').value = a.excerpt || '';
+  $('#edBody').value = a.body || '';
+  updateImagePreview();
+  updateMdPreview();
+  $('#editorModal').classList.remove('hidden');
+}
+
+function closeEditor() {
+  $('#editorModal').classList.add('hidden');
+  editingIndex = -1;
+}
+
+function updateMdPreview() {
+  $('#mdPreview').innerHTML = mdToHtml($('#edBody').value) || '<p class="text-gray-400 text-sm">Preview muncul di sini...</p>';
+}
+
+function updateImagePreview() {
+  const url = $('#edImage').value.trim();
+  const box = $('#edImagePreview');
+  if (url) {
+    box.classList.remove('hidden');
+    box.querySelector('img').src = url;
+  } else {
+    box.classList.add('hidden');
+  }
+}
+
+/* Auto slug dari judul */
+$('#edTitle').addEventListener('input', () => {
+  if (!$('#edSlug').value || $('#edSlug').dataset.auto === 'true') {
+    $('#edSlug').value = slugify($('#edTitle').value);
+  }
+});
+$('#edSlug').addEventListener('input', () => {
+  $('#edSlug').dataset.auto = 'false';
+});
+$('#regenSlug').onclick = () => {
+  $('#edSlug').value = slugify($('#edTitle').value);
+  $('#edSlug').dataset.auto = 'true';
+};
+
+$('#edBody').addEventListener('input', updateMdPreview);
+$('#edImage').addEventListener('input', updateImagePreview);
+
+/* Markdown toolbar */
+$$('[data-md]').forEach(btn => {
+  btn.onclick = () => {
+    const ta = $('#edBody');
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    const sel = ta.value.slice(start, end);
+    const wrap = {
+      bold:   [`**`, `**`],
+      italic: [`*`, `*`],
+      h2:     [`## `, ''],
+      link:   [`[`, `](url)`],
+      code:   ['```\n', '\n```'],
+      img:    [`![alt](`, `)`]
+    }[btn.dataset.md];
+    ta.value = ta.value.slice(0, start) + wrap[0] + sel + wrap[1] + ta.value.slice(end);
+    ta.focus();
+    ta.selectionStart = start + wrap[0].length;
+    ta.selectionEnd = start + wrap[0].length + sel.length;
+    updateMdPreview();
+  };
+});
+
+/* Upload gambar (field utama) */
+$('#edImageUpload').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    toast('Mengupload...');
+    const url = await uploadImage(file);
+    $('#edImage').value = url;
+    updateImagePreview();
+    toast('✓ Gambar terupload');
+  } catch (err) {
+    toast(err.message, 'err');
+  }
+  e.target.value = '';
+});
+
+/* Insert gambar dari markdown toolbar: klik 🖼 → pilih file → upload → sisipkan */
+$('#mdPreview').addEventListener('click', (e) => {
+  if (e.target.tagName === 'IMG') {
+    // bisa ditambah handler zoom kalau perlu
+  }
+});
+
+/* Save editor */
+$('#saveEditor').onclick = () => {
+  const a = {
+    title: $('#edTitle').value.trim(),
+    slug: $('#edSlug').value.trim() || slugify($('#edTitle').value),
+    category: $('#edCategory').value.trim(),
+    date: $('#edDate').value,
+    status: $('#edStatus').value,
+    image: $('#edImage').value.trim(),
+    imageAlt: $('#edImageAlt').value.trim(),
+    excerpt: $('#edExcerpt').value.trim(),
+    body: $('#edBody').value,
+    url: `/artikel/${$('#edSlug').value.trim() || slugify($('#edTitle').value)}`,
+    updatedAt: new Date().toISOString()
+  };
+  if (!a.title) { toast('Judul wajib diisi', 'err'); return; }
+
+  if (editingIndex >= 0) content.articles[editingIndex] = a;
+  else content.articles.unshift(a);
+
+  dirty = true;
+  closeEditor();
+  renderAll();
+  toast('✓ Artikel disimpan (belum dipublish)');
+};
+
+$('#closeEditor').onclick = closeEditor;
+$('#cancelEditor').onclick = closeEditor;
+$('#editorModal').addEventListener('click', (e) => {
+  if (e.target.id === 'editorModal') closeEditor();
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function initTabs() {
+  $$('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      $$('.tab-btn').forEach(b => b.classList.remove('bg-blue-600','text-white'));
+      btn.classList.add('bg-blue-600','text-white');
+      $$('[data-panel]').forEach(p => p.classList.add('hidden'));
+      $(`[data-panel="${btn.dataset.tab}"]`).classList.remove('hidden');
+    };
+  });
+  $('.tab-btn').click();
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+$('#addArticle').onclick = () => {
+  openEditor(-1);
+};
+$('#addFaq').onclick = () => { content.faq.push({ q:'', a:'' }); dirty=true; renderFaq(); };
+$('#addNav').onclick = () => { content.nav.push({ label:'', url:'' }); dirty=true; renderNav(); };
+$('#saveBtn').onclick = async () => {
+  try { await saveContent(); }
+  catch (e) { toast(e.message, 'err'); }
+};
+$('#reloadBtn').onclick = async () => {
+  if (dirty && !confirm('Perubahan belum disimpan. Muat ulang?')) return;
+  await loadContent();
+  renderAll();
+};
+$('#applyRawBtn').onclick = () => {
+  try {
+    content = JSON.parse($('#rawEditor').value);
+    dirty = true;
+    renderAll();
+    toast('JSON diterapkan (belum disimpan)');
+  } catch (e) { toast('JSON tidak valid: ' + e.message, 'err'); }
 };
 
 /* ============================================================
@@ -281,11 +906,8 @@ $('#loginForm').addEventListener('submit', async (e) => {
   };
 
   try {
-    // verifikasi token & akses repo
     const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}`);
     if (!r.ok) throw new Error('Repo/token tidak valid: ' + r.status);
-
-    // simpan
     localStorage.setItem('cms_ctx', JSON.stringify(ctx));
     await bootApp();
   } catch (err) {
@@ -296,322 +918,10 @@ $('#loginForm').addEventListener('submit', async (e) => {
   }
 });
 
-$('#logoutBtn').addEventListener('click', () => {
+$('#logoutBtn').onclick = () => {
+  if (dirty && !confirm('Ada perubahan belum disimpan. Keluar?')) return;
   localStorage.removeItem('cms_ctx');
   location.reload();
-});
-
-/* ============================================================
-   GITHUB API
-   ============================================================ */
-async function ghFetch(path, opts={}) {
-  return fetch(API + path, {
-    ...opts,
-    headers: {
-      'Authorization': `Bearer ${ctx.token}`,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...(opts.headers||{})
-    }
-  });
-}
-
-async function loadContent() {
-  setStatus('Memuat...', 'yellow');
-  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json?ref=${ctx.branch}`);
-  if (r.status === 404) {
-    // file belum ada → mulai default
-    content = defaultContent();
-    sha = null;
-    setStatus('Baru', 'blue');
-    return;
-  }
-  if (!r.ok) throw new Error('Gagal memuat content.json: ' + r.status);
-  const data = await r.json();
-  sha = data.sha;
-  content = JSON.parse(atob(data.content));
-  setStatus('Tersinkron', 'green');
-}
-
-async function saveContent() {
-  setStatus('Menyimpan...', 'yellow');
-  const body = {
-    message: `chore(cms): update content ${new Date().toISOString()}`,
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
-    branch: ctx.branch
-  };
-  if (sha) body.sha = sha;
-
-  const r = await ghFetch(`/repos/${ctx.owner}/${ctx.repo}/contents/content.json`, {
-    method: 'PUT',
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) {
-    const err = await r.text();
-    setStatus('Gagal', 'red');
-    throw new Error('Simpan gagal: ' + r.status + ' ' + err);
-  }
-  const data = await r.json();
-  sha = data.content.sha;
-  dirty = false;
-  setStatus('Tersimpan ✓', 'green');
-  toast('✓ Berhasil publish ke GitHub');
-}
-
-/* ============================================================
-   DEFAULT CONTENT
-   ============================================================ */
-function defaultContent() {
-  return {
-    site: { name: 'Sidikul Clone', tagline: 'Portal Artikel Teknologi & Bisnis' },
-    seo: {
-      title: 'Portal Artikel Teknologi & Bisnis Digital',
-      description: 'Portal artikel terpercaya seputar teknologi, web development, bisnis digital.',
-      keywords: 'teknologi, web development, bisnis digital',
-      canonical: 'https://example.com/',
-      ogImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80'
-    },
-    hero: {
-      title: 'Panduan Lengkap Memulai Karier di Bidang Web Development untuk Pemula',
-      category: 'Teknologi',
-      excerpt: 'Pelajari langkah demi langkah, mulai dari HTML dasar hingga framework modern.',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-      imageAlt: 'Ilustrasi coding di layar laptop',
-      url: '/artikel/panduan-web-development-pemula',
-      date: '2026-10-30'
-    },
-    nav: [
-      { label: 'Home', url: '/', active: true },
-      { label: 'Teknologi', url: '/teknologi' },
-      { label: 'Bisnis', url: '/bisnis' },
-      { label: 'Gaya Hidup', url: '/gaya-hidup' }
-    ],
-    articles: [],
-    faq: [],
-    footer: [
-      { label: 'Tentang', url: '/tentang' },
-      { label: 'Kontak', url: '/kontak' },
-      { label: 'Privasi', url: '/privasi' }
-    ]
-  };
-}
-
-/* ============================================================
-   RENDER
-   ============================================================ */
-function renderAll() {
-  // Bind simple fields
-  $$('[data-bind]').forEach(el => {
-    const v = getPath(content, el.dataset.bind) ?? '';
-    el.value = v;
-    el.oninput = () => {
-      setPath(content, el.dataset.bind, el.value);
-      dirty = true;
-      setStatus('Belum disimpan', 'yellow');
-    };
-  });
-
-  renderArticles();
-  renderFaq();
-  renderNav();
-  renderFooter();
-  $('#rawEditor').value = JSON.stringify(content, null, 2);
-  $('#articleCount').textContent = content.articles.length;
-}
-
-function renderArticles() {
-  const list = $('#articlesList');
-  list.innerHTML = '';
-  content.articles.forEach((a, i) => {
-    const card = document.createElement('div');
-    card.className = 'bg-white rounded-xl shadow-sm p-4 border border-gray-100';
-    card.innerHTML = `
-      <div class="flex items-start justify-between gap-3">
-        <div class="flex-1">
-          <input data-art="${i}.title" value="${esc(a.title)}" placeholder="Judul artikel"
-                 class="w-full text-base font-semibold px-2 py-1 border rounded mb-2">
-          <div class="grid sm:grid-cols-3 gap-2">
-            <input data-art="${i}.category" value="${esc(a.category)}" placeholder="Kategori"
-                   class="px-2 py-1 border rounded text-sm">
-            <input data-art="${i}.date" type="date" value="${esc(a.date)}"
-                   class="px-2 py-1 border rounded text-sm">
-            <input data-art="${i}.url" value="${esc(a.url)}" placeholder="/artikel/slug"
-                   class="px-2 py-1 border rounded text-sm">
-          </div>
-          <input data-art="${i}.image" value="${esc(a.image)}" placeholder="URL gambar"
-                 class="w-full mt-2 px-2 py-1 border rounded text-xs">
-          <input data-art="${i}.imageAlt" value="${esc(a.imageAlt)}" placeholder="Alt text (SEO)"
-                 class="w-full mt-1 px-2 py-1 border rounded text-xs">
-          <textarea data-art="${i}.excerpt" rows="2" placeholder="Excerpt"
-                    class="w-full mt-2 px-2 py-1 border rounded text-xs">${esc(a.excerpt)}</textarea>
-        </div>
-        <button data-del="${i}" class="text-red-500 hover:text-red-700 text-sm px-2">✕</button>
-      </div>
-    `;
-    list.appendChild(card);
-  });
-
-  // bind
-  $$('[data-art]').forEach(el => {
-    el.oninput = () => {
-      const [idx, key] = el.dataset.art.split('.');
-      content.articles[idx][key] = el.value;
-      dirty = true;
-      setStatus('Belum disimpan', 'yellow');
-    };
-  });
-  $$('[data-del]').forEach(el => {
-    el.onclick = () => {
-      if (!confirm('Hapus artikel ini?')) return;
-      content.articles.splice(el.dataset.del, 1);
-      dirty = true;
-      renderArticles();
-      $('#articleCount').textContent = content.articles.length;
-    };
-  });
-}
-
-function renderFaq() {
-  const list = $('#faqList');
-  list.innerHTML = '';
-  content.faq.forEach((f, i) => {
-    const card = document.createElement('div');
-    card.className = 'bg-white rounded-xl shadow-sm p-4 border border-gray-100';
-    card.innerHTML = `
-      <div class="flex items-start gap-3">
-        <div class="flex-1 space-y-2">
-          <input data-faq="${i}.q" value="${esc(f.q)}" placeholder="Pertanyaan"
-                 class="w-full px-2 py-1 border rounded font-medium">
-          <textarea data-faq="${i}.a" rows="2" placeholder="Jawaban"
-                    class="w-full px-2 py-1 border rounded text-sm">${esc(f.a)}</textarea>
-        </div>
-        <button data-delfaq="${i}" class="text-red-500 hover:text-red-700 text-sm px-2">✕</button>
-      </div>
-    `;
-    list.appendChild(card);
-  });
-  $$('[data-faq]').forEach(el => {
-    el.oninput = () => {
-      const [idx, key] = el.dataset.faq.split('.');
-      content.faq[idx][key === 'q' ? 'q' : 'a'] = el.value;
-      dirty = true;
-    };
-  });
-  $$('[data-delfaq]').forEach(el => {
-    el.onclick = () => {
-      content.faq.splice(el.dataset.delfaq, 1);
-      dirty = true;
-      renderFaq();
-    };
-  });
-}
-
-function renderNav() {
-  const navList = $('#navList');
-  const footList = $('#footerList');
-  navList.innerHTML = '';
-  footList.innerHTML = '';
-
-  content.nav.forEach((n, i) => {
-    navList.innerHTML += `
-      <div class="flex gap-2 items-center">
-        <input data-nav="${i}.label" value="${esc(n.label)}" placeholder="Label" class="flex-1 px-2 py-1 border rounded text-sm">
-        <input data-nav="${i}.url" value="${esc(n.url)}" placeholder="/url" class="flex-1 px-2 py-1 border rounded text-sm">
-        <button data-delnav="${i}" class="text-red-500 px-2">✕</button>
-      </div>`;
-  });
-  content.footer.forEach((n, i) => {
-    footList.innerHTML += `
-      <div class="flex gap-2 items-center">
-        <input data-foot="${i}.label" value="${esc(n.label)}" placeholder="Label" class="flex-1 px-2 py-1 border rounded text-sm">
-        <input data-foot="${i}.url" value="${esc(n.url)}" placeholder="/url" class="flex-1 px-2 py-1 border rounded text-sm">
-        <button data-delfoot="${i}" class="text-red-500 px-2">✕</button>
-      </div>`;
-  });
-
-  $$('[data-nav]').forEach(el => {
-    el.oninput = () => {
-      const [idx, key] = el.dataset.nav.split('.');
-      content.nav[idx][key] = el.value;
-      dirty = true;
-    };
-  });
-  $$('[data-foot]').forEach(el => {
-    el.oninput = () => {
-      const [idx, key] = el.dataset.foot.split('.');
-      content.footer[idx][key] = el.value;
-      dirty = true;
-    };
-  });
-  $$('[data-delnav]').forEach(el => el.onclick = () => {
-    content.nav.splice(el.dataset.delnav, 1); dirty = true; renderNav();
-  });
-  $$('[data-delfoot]').forEach(el => el.onclick = () => {
-    content.footer.splice(el.dataset.delfoot, 1); dirty = true; renderNav();
-  });
-}
-
-function esc(s='') { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-
-/* ============================================================
-   TABS
-   ============================================================ */
-function initTabs() {
-  $$('.tab-btn').forEach(btn => {
-    btn.onclick = () => {
-      $$('.tab-btn').forEach(b => b.classList.remove('bg-blue-600','text-white'));
-      btn.classList.add('bg-blue-600','text-white');
-      $$('[data-panel]').forEach(p => p.classList.add('hidden'));
-      $(`[data-panel="${btn.dataset.tab}"]`).classList.remove('hidden');
-    };
-  });
-  // default active
-  $('.tab-btn').click();
-}
-
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-$('#addArticle').onclick = () => {
-  content.articles.unshift({
-    title: '', category: '', date: new Date().toISOString().slice(0,10),
-    url: '', image: '', imageAlt: '', excerpt: ''
-  });
-  dirty = true;
-  renderArticles();
-  $('#articleCount').textContent = content.articles.length;
-};
-$('#addFaq').onclick = () => {
-  content.faq.push({ q: '', a: '' });
-  dirty = true;
-  renderFaq();
-};
-$('#addNav').onclick = () => {
-  content.nav.push({ label: '', url: '' });
-  dirty = true;
-  renderNav();
-};
-$('#saveBtn').onclick = async () => {
-  try {
-    await saveContent();
-  } catch (e) {
-    toast(e.message, 'err');
-  }
-};
-$('#reloadBtn').onclick = async () => {
-  if (dirty && !confirm('Perubahan belum disimpan. Muat ulang?')) return;
-  await loadContent();
-  renderAll();
-};
-$('#applyRawBtn').onclick = () => {
-  try {
-    content = JSON.parse($('#rawEditor').value);
-    dirty = true;
-    renderAll();
-    toast('JSON diterapkan (belum disimpan)');
-  } catch (e) {
-    toast('JSON tidak valid: ' + e.message, 'err');
-  }
 };
 
 /* ============================================================
@@ -626,26 +936,21 @@ async function bootApp() {
   renderAll();
 }
 
-// Auto-login jika ada ctx tersimpan
 (function init() {
   const saved = localStorage.getItem('cms_ctx');
   if (saved) {
     try {
       ctx = JSON.parse(saved);
-      $('#owner').value = ctx.owner;
-      $('#repo').value = ctx.repo;
-      $('#branch').value = ctx.branch;
-      $('#token').value = ctx.token;
+      Object.keys(ctx).forEach(k => { const el = $('#' + k); if (el) el.value = ctx[k]; });
       bootApp().catch(err => {
         toast('Sesi habis: ' + err.message, 'err');
         localStorage.removeItem('cms_ctx');
         location.reload();
       });
-    } catch(e) { /* ignore */ }
+    } catch (e) { /* ignore */ }
   }
 })();
 
-// Warn before leaving with unsaved changes
 window.addEventListener('beforeunload', (e) => {
   if (dirty) { e.preventDefault(); e.returnValue = ''; }
 });

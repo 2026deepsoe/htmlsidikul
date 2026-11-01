@@ -1,5 +1,4 @@
 name: Generate Sitemap
-
 on:
   push:
     paths:
@@ -15,26 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Generate sitemap.xml
         run: |
           node -e '
           const fs = require("fs");
           const c = JSON.parse(fs.readFileSync("content.json","utf8"));
-          const base = (c.seo.canonical || "https://username.github.io").replace(/\/$/,"");
+          const base = (c.seo.canonical || "https://2026deepsoe.github.io/htmlsidikul").replace(/\/$/,"");
+          // hanya artikel yang published
           const urls = ["/", "/artikel"]
-            .concat((c.articles||[]).map(a=>a.url))
-            .filter(Boolean)
-            .map(u => u.startsWith("http") ? u : base + (u.startsWith("/") ? u : "/" + u));
-
+            .concat((c.articles||[]).filter(a => a.status === "published" && a.slug).map(a => "/artikel.html?slug=" + a.slug));
           const xml = `<?xml version="1.0" encoding="UTF-8"?>
           <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-          ${urls.map(u=>`  <url><loc>${u}</loc><changefreq>weekly</changefreq></url>`).join("\n")}
+          ${urls.map(u => `  <url><loc>${base}${u}</loc><changefreq>weekly</changefreq></url>`).join("\n")}
           </urlset>`;
           fs.writeFileSync("sitemap.xml", xml);
-          console.log("Sitemap generated:", urls.length, "URLs");
+          console.log("Sitemap:", urls.length, "URLs");
           '
-
       - name: Commit sitemap
         run: |
           git config user.name "github-actions[bot]"
